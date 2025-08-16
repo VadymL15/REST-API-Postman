@@ -1,0 +1,556 @@
+{
+	"info": {
+		"_postman_id": "6a1ccdb5-8897-4f35-b5a9-20f0b4984cdb",
+		"name": "Headers and Authorization",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47565020",
+		"_collection_link": "https://vadum-lebid-5626571.postman.co/workspace/Vadym_L's-Workspace~98d85bbb-365a-41d8-8cea-71723909cca0/collection/47565020-6a1ccdb5-8897-4f35-b5a9-20f0b4984cdb?action=share&source=collection_link&creator=47565020"
+	},
+	"item": [
+		{
+			"name": "Authorization Header",
+			"item": [
+				{
+					"name": "CRUD Authorization on local server",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"Has token\", () => pm.expect(j.token).to.be.a(\"string\"));\r",
+											"pm.environment.set(\"token\", j.token);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"Vadym\",\r\n  \"password\": \"12345\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localUrl}}/login",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Post with token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"201\", () => pm.response.to.have.status(201));\r",
+											"pm.environment.set(\"postId\", pm.response.json().id);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \r\n    \"title\": \"Secured post\", \r\n    \"body\": \"Only with token\", \r\n    \"userId\": 100 \r\n}"
+								},
+								"url": {
+									"raw": "{{localUrl}}/posts",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+											"pm.test(\"GET: has required fields\", () => {\r",
+											"  pm.expect(j).to.have.keys([\"id\",\"title\",\"body\",\"userId\"]);\r",
+											"});\r",
+											"pm.test(\"GET: data of fields is expected\", () => {\r",
+											"  pm.expect(j.title).to.eql(\"Secured post\");\r",
+											"    pm.expect(j.body).to.eql(\"Only with token\");\r",
+											"    pm.expect(j.userId).to.eql(100);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localUrl}}/posts/{{postId}}",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fully update with token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT: 200 OK\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"PUT: id preserved\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+											"pm.test(\"PUT: fields updated\", () => {\r",
+											"  pm.expect(j.title).to.eql(\"Secured update local post with put\");\r",
+											"  pm.expect(j.body).to.eql(\"Secured update body text with put\");\r",
+											"  pm.expect(j.userId).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": {{postId}},\r\n  \"title\": \"Secured update local post with put\",\r\n  \"body\": \"Secured update body text with put\",\r\n  \"userId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localUrl}}/posts/{{postId}}",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Partially update with token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PATCH: 200 OK\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"PATCH: title patched\", () => pm.expect(j.title).to.eql(\"Partially updated local post with token\"));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Partially updated local post with token\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localUrl}}/posts/{{postId}}",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check updated post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET-after-update: 200 OK\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"GET-after-update: title is patched\", () => pm.expect(j.title).to.eql(\"Partially updated local post with token\"));\r",
+											"pm.test(\"GET-after-update: body isn't patched\", () => pm.expect(j.body).to.eql(\"Secured update body text with put\"));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localUrl}}/posts/{{postId}}",
+									"host": [
+										"{{localUrl}}"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete post with token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE: 200 OK (json-server)\", () => pm.response.to.have.status(200));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "3000",
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check after deleting",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"GET-after-delete: 404 Not Found\", () => pm.response.to.have.status(404));"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "3000",
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login (local server)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"Has token\", () => pm.expect(j.token).to.be.a(\"string\"));\r",
+									"pm.environment.set(\"token\", j.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"Vadym\",\r\n  \"password\": \"12345\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localUrl}}/login",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post with token (local server)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"201\", () => pm.response.to.have.status(201));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"title\": \"Secured post\", \"body\": \"Only with token\", \"userId\": 1 }"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post without token (local server)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"401 Unauthorized\", () => pm.response.to.have.status(401));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"Has token\", () => {\r",
+									"    pm.expect(j.error).to.be.a(\"string\")\r",
+									"    pm.expect(j.error).to.eql(\"Missing Bearer token\")\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"title\": \"Secured post\", \"body\": \"Only with token\", \"userId\": 1 }"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Create with headers",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Note",
+						"value": "Learning headers",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Header test\",\r\n  \"body\": \"Post with headers\",\r\n  \"userId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
