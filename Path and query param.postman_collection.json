@@ -1,0 +1,58 @@
+{
+	"info": {
+		"_postman_id": "68b6c2dd-b3b7-4d49-b752-c84494858517",
+		"name": "Path and query param",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47565020",
+		"_collection_link": "https://vadum-lebid-5626571.postman.co/workspace/Vadym_L's-Workspace~98d85bbb-365a-41d8-8cea-71723909cca0/collection/47565020-68b6c2dd-b3b7-4d49-b752-c84494858517?action=share&source=collection_link&creator=47565020"
+	},
+	"item": [
+		{
+			"name": "Path param",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/posts/3",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"posts",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query param",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jsonplaceholder.typicode.com/comments?postId=6",
+					"protocol": "https",
+					"host": [
+						"jsonplaceholder",
+						"typicode",
+						"com"
+					],
+					"path": [
+						"comments"
+					],
+					"query": [
+						{
+							"key": "postId",
+							"value": "6"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
