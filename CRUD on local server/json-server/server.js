@@ -76,39 +76,6 @@ server.use((req, res, next) => {
 
   next();
 });
-// Пам'ять виданих токенів (на час роботи процесу)
-const issuedTokens = new Set();
-
-// /login видає фейковий токен і кладе його в пам'ять
-server.post('/login', (req, res) => {
-  const { username, password } = req.body || {};
-  if (!username || !password) {
-    return res.status(400).json({ error: 'username and password are required' });
-  }
-  const token = `abc123.${Date.now()}`;
-  issuedTokens.add(token);
-  return res.status(200).json({ token });
-});
-
-// Middleware: вимагати Bearer токен для write-операцій на /posts
-server.use((req, res, next) => {
-  const needsAuth =
-    req.path.startsWith('/posts') &&
-    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
-
-  if (!needsAuth) return next();
-
-  const auth = req.get('authorization') || '';
-  const m = auth.match(/^Bearer\s+(.+)$/i);
-  if (!m) return res.status(401).json({ error: 'Missing Bearer token' });
-
-  const token = m[1];
-  if (!issuedTokens.has(token)) {
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-  next();
-});
-
 server.use(router);
 
 const PORT = 3000;
