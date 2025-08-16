@@ -101,10 +101,294 @@
 			"name": "jsonplaceholder.typicode",
 			"item": [
 				{
-					"name": "A little Automation",
+					"name": "Positive and negative requests",
 					"item": [
 						{
-							"name": "Some posts",
+							"name": "All users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/users",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User 6",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/users/6",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"users",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create my post",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Vadym's posts\",\r\n  \"body\": \"Intresting body text\",\r\n  \"userId\": 12\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get posts 6",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/6",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update using PUT",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 6,\r\n  \"title\": \"Updated due to put\",\r\n  \"body\": \"Updated body text due to put\",\r\n  \"userId\": 7\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/6",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update using PATCH",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Partially updated post\",\r\n  \"userId\": 13333\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/1",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deleting",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/1",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Negative 1",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/users/9999",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"users",
+										"9999"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Negative 2",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/666",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"666"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Negative 2.1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Returns 404 for non-numeric id\", function () {\r",
+											"  pm.response.to.have.status(404);\r",
+											"  const txt = pm.response.text();\r",
+											"  pm.expect(txt === \"{}\" || txt === \"\").to.be.true;\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/f",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"f"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Methods with tests",
+					"item": [
+						{
+							"name": "GET with tests",
 							"event": [
 								{
 									"listen": "test",
@@ -148,287 +432,432 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "POST with tests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Title matches the sent data\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.title).to.eql(\"My new post\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has an ID\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData).to.have.property(\"id\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"My new post\",\r\n  \"body\": \"This is a test post created in Postman.\",\r\n  \"userId\": 1\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PUT with tests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+											"\r",
+											"const json = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Returned object has id=6\", () => pm.expect(json.id).to.eql(6));\r",
+											"pm.test(\"Title updated\", () => pm.expect(json.title).to.eql(\"Fully title update with put\"));\r",
+											"pm.test(\"Body updated\", () => pm.expect(json.body).to.eql(\"Fully body update with put\"));\r",
+											"pm.test(\"Content-Type is JSON\", () =>\r",
+											"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\")\r",
+											");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 1,\r\n  \"title\": \"Fully title update with put\",\r\n  \"body\": \"Fully body update with put\",\r\n  \"userId\": 105\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/6",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH with tests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+											"\r",
+											"const json = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Has id field\", () => pm.expect(json).to.have.property(\"id\"));\r",
+											"pm.test(\"Title partially body\", () =>\r",
+											"  pm.expect(json.body).to.eql(\"Partially updated body\")\r",
+											");\r",
+											"pm.test(\"Content-Type is JSON\", () =>\r",
+											"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\")\r",
+											");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"body\": \"Partially updated body\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/15",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"15"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DEL with tests",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status is 200 or 204\", () =>\r",
+											"  pm.expect([200, 204]).to.include(pm.response.code)\r",
+											");\r",
+											"\r",
+											"pm.test(\"Body is empty or {}\", () => {\r",
+											"  const t = (pm.response.text() || \"\").trim();\r",
+											"  pm.expect([\"\", \"{}\", \"null\"]).to.include(t);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/8",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"8"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
 				{
-					"name": "All users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/users",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "User 6",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/users/6",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"users",
-								"6"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create my post",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Vadym's posts\",\r\n  \"body\": \"Intresting body text\",\r\n  \"userId\": 12\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get posts 6",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/6",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts",
-								"6"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update using PUT",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"id\": 6,\r\n  \"title\": \"Updated due to put\",\r\n  \"body\": \"Updated body text due to put\",\r\n  \"userId\": 7\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/6",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts",
-								"6"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update using PATCH",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Partially updated post\",\r\n  \"userId\": 13333\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/1",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Deleting",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/1",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Negative 1",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/users/9999",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"users",
-								"9999"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Negative 2",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/666",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
-							],
-							"path": [
-								"posts",
-								"666"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Negative 2.1",
-					"event": [
+					"name": "СRUD Runner",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Returns 404 for non-numeric id\", function () {\r",
-									"  pm.response.to.have.status(404);\r",
-									"  const txt = pm.response.text();\r",
-									"  pm.expect(txt === \"{}\" || txt === \"\").to.be.true;\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "https://jsonplaceholder.typicode.com/posts/f",
-							"protocol": "https",
-							"host": [
-								"jsonplaceholder",
-								"typicode",
-								"com"
+							"name": "Request 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST: status 201\", () => pm.response.to.have.status(201));\r",
+											"pm.test(\"POST: JSON content-type\", () =>\r",
+											"  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\")\r",
+											");\r",
+											"pm.test(\"POST: response time < 1200ms\", () =>\r",
+											"  pm.expect(pm.response.responseTime).to.be.below(1200)\r",
+											");\r",
+											"\r",
+											"// зберігаємо id для наступних запитів (демо API повертає id, навіть якщо не зберігає запис)\r",
+											"const j = pm.response.json();\r",
+											"pm.environment.set(\"postId\", j.id || 1);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
 							],
-							"path": [
-								"posts",
-								"f"
-							]
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"My new post\",\r\n  \"body\": \"This is a test post created in Postman.\",\r\n  \"userId\": 1\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Request 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PUT: status 200\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"PUT: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\") || 1)));\r",
+											"pm.test(\"PUT: title updated\", () => pm.expect(j.title).to.eql(\"Updated post\"));\r",
+											"pm.test(\"PUT: response time < 1200ms\", () =>\r",
+											"  pm.expect(pm.response.responseTime).to.be.below(1200)\r",
+											");\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": {{postId}},\r\n  \"title\": \"Updated post\",\r\n  \"body\": \"Updated body text\",\r\n  \"userId\": 1\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Request 3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"PATCH: status 200\", () => pm.response.to.have.status(200));\r",
+											"const j = pm.response.json();\r",
+											"pm.test(\"PATCH: title patched\", () => pm.expect(j.title).to.eql(\"Partially updated post\"));\r",
+											"pm.test(\"PATCH: response time < 1200ms\", () =>\r",
+											"  pm.expect(pm.response.responseTime).to.be.below(1200)\r",
+											");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Partially updated post\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Request 4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"DELETE: status 200 or 204\", () =>\r",
+											"  pm.expect([200, 204]).to.include(pm.response.code)\r",
+											");\r",
+											"pm.test(\"DELETE: response time < 1200ms\", () =>\r",
+											"  pm.expect(pm.response.responseTime).to.be.below(1200)\r",
+											");\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://jsonplaceholder.typicode.com/posts/{{postId}}",
+									"protocol": "https",
+									"host": [
+										"jsonplaceholder",
+										"typicode",
+										"com"
+									],
+									"path": [
+										"posts",
+										"{{postId}}"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			]
 		}
