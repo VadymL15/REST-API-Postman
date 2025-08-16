@@ -1,0 +1,86 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Hello World",
+      "body": "First post body",
+      "userId": 1
+    },
+    {
+      "id": "2",
+      "title": "Second Post",
+      "body": "Another body",
+      "userId": 1
+    },
+    {
+      "id": "9c11",
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1
+    },
+    {
+      "id": "0247",
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1
+    },
+    {
+      "id": "30fa",
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1
+    },
+    {
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1,
+      "id": "BQVnpLV"
+    },
+    {
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1,
+      "id": "IPXKypu"
+    },
+    {
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1,
+      "id": "jhTFFCz"
+    },
+    {
+      "title": "My new local post",
+      "body": "Created via Postman on json-server.",
+      "userId": 1,
+      "id": 248
+    },
+    {
+      "title": "Header test",
+      "body": "Post with headers",
+      "userId": 1,
+      "id": 249
+    },
+    {
+      "title": "Header test",
+      "body": "Post with headers",
+      "userId": 1,
+      "id": 250
+    },
+    {
+      "title": "Secured post",
+      "body": "Only with token",
+      "userId": 1,
+      "id": 251
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "postId": 1,
+      "body": "Nice post!"
+    }
+  ],
+  "profile": {
+    "name": "Test User"
+  }
+}

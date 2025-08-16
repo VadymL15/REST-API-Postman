@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "3022767e-92d8-48d4-8d81-53bb0caa37da",
+		"name": "CRUD on local server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47565020",
+		"_collection_link": "https://vadum-lebid-5626571.postman.co/workspace/Vadym_L's-Workspace~98d85bbb-365a-41d8-8cea-71723909cca0/collection/47565020-3022767e-92d8-48d4-8d81-53bb0caa37da?action=share&source=collection_link&creator=47565020"
+	},
+	"item": [
+		{
+			"name": "Create new post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"POST: 201 Created\", () => pm.response.to.have.status(201));\r",
+							"const j = pm.response.json();\r",
+							"pm.test(\"POST: has numeric id\", () => pm.expect(j.id).to.be.a(\"number\"));\r",
+							"pm.environment.set(\"postId\", j.id); // збережемо id для подальших запитів\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"My new local post\",\r\n  \"body\": \"Created via Postman on json-server.\",\r\n  \"userId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check new post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+							"const j = pm.response.json();\r",
+							"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+							"pm.test(\"GET: has required fields\", () => {\r",
+							"  pm.expect(j).to.have.keys([\"id\",\"title\",\"body\",\"userId\"]);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fully uodate new post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"PUT: 200 OK\", () => pm.response.to.have.status(200));\r",
+							"const j = pm.response.json();\r",
+							"pm.test(\"PUT: id preserved\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+							"pm.test(\"PUT: fields updated\", () => {\r",
+							"  pm.expect(j.title).to.eql(\"Updated local post with put\");\r",
+							"  pm.expect(j.body).to.eql(\"Updated body text with put\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": {{postId}},\r\n  \"title\": \"Updated local post with put\",\r\n  \"body\": \"Updated body text with put\",\r\n  \"userId\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partially update new ppost",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"PATCH: 200 OK\", () => pm.response.to.have.status(200));\r",
+							"const j = pm.response.json();\r",
+							"pm.test(\"PATCH: title patched\", () => pm.expect(j.title).to.eql(\"Partially updated local post\"));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Partially updated local post\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check uppdated post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET-after-update: 200 OK\", () => pm.response.to.have.status(200));\r",
+							"const j = pm.response.json();\r",
+							"pm.test(\"GET-after-update: title is patched\", () => pm.expect(j.title).to.eql(\"Partially updated local post\"));\r",
+							"pm.test(\"GET-after-update: body isn't patched\", () => pm.expect(j.body).to.eql(\"Updated body text with put\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"DELETE: 200 OK (json-server)\", () => pm.response.to.have.status(200));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check after deleting",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET-after-delete: 404 Not Found\", () => pm.response.to.have.status(404));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:3000/posts/{{postId}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"posts",
+						"{{postId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
