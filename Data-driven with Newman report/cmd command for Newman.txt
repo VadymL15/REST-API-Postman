@@ -1,0 +1,7 @@
+C:\Data-driven>newman run "Data-driven (Runner with CSV-JSON).postman_collection.json" ^
+--folder "CRUD with JSON data" ^
+--environment "For local server.postman_environment.json" ^
+--iteration-data "data3.json" ^
+-r cli,htmlextra ^
+--reporter-htmlextra-export "report.html" ^
+--reporter-htmlextra-title "CRUD with JSON data - API Tests Report"

@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "title": "First post",
+    "body": "Body of first post",
+    "userId": 1,
+    "putTitle": "Updated First Post (PUT)",
+    "putBody": "Completely replaced body via PUT",
+    "patchTitle": "Partially Updated First Post (PATCH)",
+    "patchBody": "Partially updated body via PATCH"
+  },
+  {
+    "id": 2,
+    "title": "Second post",
+    "body": "Body of second post",
+    "userId": 1,
+    "putTitle": "Updated Second Post (PUT)",
+    "putBody": "Completely replaced body via PUT",
+    "patchTitle": "Partially Updated Second Post (PATCH)",
+    "patchBody": "Partially updated body via PATCH"
+  },
+  {
+    "id": 3,
+    "title": "Third post",
+    "body": "Body of third post",
+    "userId": 2,
+    "putTitle": "Updated Third Post (PUT)",
+    "putBody": "Completely replaced body via PUT",
+    "patchTitle": "Partially Updated Third Post (PATCH)",
+    "patchBody": "Partially updated body via PATCH"
+  },
+  {
+    "id": 4,
+    "title": "Fourth post",
+    "body": "Body of fourth post",
+    "userId": 3,
+    "putTitle": "Updated Fourth Post (PUT)",
+    "putBody": "Completely replaced body via PUT",
+    "patchTitle": "Partially Updated Fourth Post (PATCH)",
+    "patchBody": "Partially updated body via PATCH"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "First post",
+    "body": "Body of first post",
+    "userId": 1
+  },
+  {
+    "id": 2,
+    "title": "Second post",
+    "body": "Body of second post",
+    "userId": 1
+  },
+  {
+    "id": 3,
+    "title": "Third post",
+    "body": "Body of third post",
+    "userId": 2
+  },
+  {
+    "id": 4,
+    "title": "Fourth post",
+    "body": "Body of fourth post",
+    "userId": 3
+  }
+]
