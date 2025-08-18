@@ -1,35 +1,47 @@
-API Tests with Postman
+# REST API Testing with Postman
 
-This repository contains Postman API tests for the JSONPlaceholder demo API, using both manual execution and automated runs with the Collection Runner.
+This repository contains examples of REST API testing using **Postman** and **Newman**.  
+It demonstrates manual execution, data-driven testing, and automated runs via the CLI.
 
-Contents
+---
 
-collection.json — The exported Postman collection with prepared requests and tests.
+## 📂 Contents
 
-data.csv — A set of IDs used for GET requests via the Collection Runner.
+- `collection.json` — Exported Postman collection with predefined requests and tests.
+- `data.csv` — Data file containing IDs used by the Collection Runner for GET requests.
+- `README.md` — Documentation for setup and usage.
 
-README.md — Instructions for running the tests.
+---
 
-Running in Postman
+## 🚀 Getting Started
 
-Import the collection
+### Prerequisites
 
-Open Postman → Import → Select collection.json.
+- [Postman](https://www.postman.com/downloads/) installed on your computer.
+- (Optional) [Node.js](https://nodejs.org/) if you want to run tests with Newman.
 
-Prepare variables
+---
 
-The requests use the variable {{id}} for path parameters.
+### Running Tests in Postman (Manual)
 
-Run with Data File
+1. Open Postman.
+2. Click **Import** → Select `collection.json`.
+3. The requests use a variable `{{id}}` in the path.
+4. Execute requests manually:
+   - **GET**
+   - **POST**
+   - **PUT**
+   - **DELETE**
 
-Open Collection Runner.
+---
 
-Select data.csv as the Data File.
+### Running with Collection Runner (Data-Driven)
 
-Run the collection — {{id}} will be replaced with values from the file.
+1. Open **Collection Runner** in Postman.
+2. Choose the imported collection.
+3. Select `data.csv` as the **Data File**.
+4. Run the collection — `{{id}}` will be replaced with values from the CSV.
 
-Test logic
-
-For IDs 1, 2, 3: Expect HTTP status 200.
-
-For all other IDs: Expect HTTP status 404.
+✅ Expected Results:
+- IDs **1, 2, 3** → **200 OK**
+- All others → **404 Not Found**
