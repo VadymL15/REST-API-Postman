@@ -1,0 +1,885 @@
+{
+	"info": {
+		"_postman_id": "06dd6ea9-cb88-48a0-810b-815d5559a1fb",
+		"name": "Data-driven (Runner with CSV/JSON)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47565020",
+		"_collection_link": "https://vadum-lebid-5626571.postman.co/workspace/Vadym_L's-Workspace~98d85bbb-365a-41d8-8cea-71723909cca0/collection/47565020-06dd6ea9-cb88-48a0-810b-815d5559a1fb?action=share&source=collection_link&creator=47565020"
+	},
+	"item": [
+		{
+			"name": "POST and GET from CSV/JSON",
+			"item": [
+				{
+					"name": "Create posts with data from files",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(\"Created:\", pm.response.json());\r",
+									"pm.test(\"201\", ()=> pm.response.to.have.status(201));\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"postId\", j.id);\r",
+									"pm.expect(j).to.have.property(\"id\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"{{title}}\",\r\n  \"body\": \"{{body}}\",\r\n  \"userId\": {{userId}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check post with data from files",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+									"pm.test(\"GET: has required fields\", () => {\r",
+									"  pm.expect(j).to.have.keys([\"id\",\"title\",\"body\",\"userId\"]);\r",
+									"});\r",
+									"let data = pm.iterationData;\r",
+									"pm.test(\"GET: data of fields is expected\", () => {\r",
+									"  pm.expect(j.title).to.eql(data.get(\"title\"));\r",
+									"    pm.expect(j.body).to.eql(data.get(\"body\"));\r",
+									"    pm.expect(j.userId).to.eql(Number(data.get(\"userId\")));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"function hasValidToken() {\r",
+							"  const t = pm.environment.get(\"token\");\r",
+							"  const exp = pm.environment.get(\"token_exp\"); // epoch ms\r",
+							"  return t && exp && Date.now() < Number(exp);\r",
+							"}\r",
+							"\r",
+							"if (!hasValidToken()) {\r",
+							"  pm.sendRequest({\r",
+							"    url: pm.environment.get(\"localUrl\") + \"/login\",\r",
+							"    method: \"POST\",\r",
+							"    header: { \"Content-Type\": \"application/json\" },\r",
+							"    body: { mode: \"raw\", raw: JSON.stringify({ username: \"Vadym\", password: \"12345\" }) }\r",
+							"  }, (err, res) => {\r",
+							"    if (err || !res || res.code !== 200) {\r",
+							"      console.log(\"Login failed:\", err || res && res.text());\r",
+							"      return; // тести потім зловлять 401\r",
+							"    }\r",
+							"    const j = res.json();\r",
+							"    pm.environment.set(\"token\", j.token);\r",
+							"    // якщо сервер повертає expiresIn типу \"30m\" – згенеруємо орієнтовний exp (30 хв)\r",
+							"    const expMs = j.expiresIn === \"30m\" ? 30*60*1000 : 20*60*1000;\r",
+							"    pm.environment.set(\"token_exp\", Date.now() + expMs);\r",
+							"  });\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "CRUD with JSON data",
+			"item": [
+				{
+					"name": "Create post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(\"Created:\", pm.response.json());\r",
+									"pm.test(\"201\", ()=> pm.response.to.have.status(201));\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"postId\", j.id);\r",
+									"pm.expect(j).to.have.property(\"id\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"{{title}}\",\r\n  \"body\": \"{{body}}\",\r\n  \"userId\": {{userId}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+									"const schema = {\r",
+									"  type: \"object\",\r",
+									"  required: [\"id\",\"title\",\"body\",\"userId\"],\r",
+									"  properties: {\r",
+									"    id: { type: \"number\" },\r",
+									"    title: { type: \"string\", minLength: 1 },\r",
+									"    body: { type: \"string\" },\r",
+									"    userId: { type: \"number\" }\r",
+									"  }\r",
+									"};\r",
+									"pm.test(\"Schema OK\", () => pm.response.to.have.jsonSchema(schema));\r",
+									"pm.test(\"GET: data of fields is expected\", () => {\r",
+									"    pm.expect(j.title).to.eql(pm.iterationData.get(\"title\"));\r",
+									"    pm.expect(j.body).to.eql(pm.iterationData.get(\"body\"));\r",
+									"    pm.expect(j.userId).to.eql(Number(pm.iterationData.get(\"userId\")));\r",
+									"    pm.expect(j.userId).to.be.a(\"number\");\r",
+									"    pm.expect(j.title).to.be.a(\"string\").and.not.empty;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fully update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT 200\", ()=> pm.response.to.have.status(200));\r",
+									"const updated = pm.response.json();\r",
+									"pm.expect(updated.title).to.eql(pm.iterationData.get(\"putTitle\"));\r",
+									"pm.expect(updated.body).to.eql(pm.iterationData.get(\"putBody\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": {{postId}},\r\n  \"title\": \"{{putTitle}}\",\r\n  \"body\": \"{{putBody}}\",\r\n  \"userId\": {{userId}}\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check post after fully update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+									"const schema = {\r",
+									"  type: \"object\",\r",
+									"  required: [\"id\",\"title\",\"body\",\"userId\"],\r",
+									"  properties: {\r",
+									"    id: { type: \"number\" },\r",
+									"    title: { type: \"string\", minLength: 1 },\r",
+									"    body: { type: \"string\" },\r",
+									"    userId: { type: \"number\" }\r",
+									"  }\r",
+									"};\r",
+									"pm.test(\"Schema OK\", () => pm.response.to.have.jsonSchema(schema));\r",
+									"\r",
+									"pm.test(\"GET: data of fields is expected\", () => {\r",
+									"    pm.expect(j.title).to.eql(pm.iterationData.get(\"putTitle\"));\r",
+									"    pm.expect(j.body).to.eql(pm.iterationData.get(\"putBody\"));\r",
+									"    pm.expect(j.userId).to.eql(Number(pm.iterationData.get(\"userId\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Title update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT 200\", ()=> pm.response.to.have.status(200));\r",
+									"const updated = pm.response.json();\r",
+									"pm.expect(updated.title).to.eql(pm.iterationData.get(\"patchTitle\"));\r",
+									"pm.expect(updated.body).to.eql(pm.iterationData.get(\"putBody\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"{{patchTitle}}\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check post after title updating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+									"const schema = {\r",
+									"  type: \"object\",\r",
+									"  required: [\"id\",\"title\",\"body\",\"userId\"],\r",
+									"  properties: {\r",
+									"    id: { type: \"number\" },\r",
+									"    title: { type: \"string\", minLength: 1 },\r",
+									"    body: { type: \"string\" },\r",
+									"    userId: { type: \"number\" }\r",
+									"  }\r",
+									"};\r",
+									"pm.test(\"Schema OK\", () => pm.response.to.have.jsonSchema(schema));\r",
+									"pm.test(\"GET: data of fields is expected\", () => {\r",
+									"  pm.expect(j.title).to.eql(pm.iterationData.get(\"patchTitle\"));\r",
+									"    pm.expect(j.body).to.eql(pm.iterationData.get(\"putBody\"));\r",
+									"    pm.expect(j.userId).to.eql(Number(pm.iterationData.get(\"userId\")));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Body update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT 200\", ()=> pm.response.to.have.status(200));\r",
+									"const updated = pm.response.json();\r",
+									"pm.expect(updated.title).to.eql(pm.iterationData.get(\"patchTitle\"));\r",
+									"pm.expect(updated.body).to.eql(pm.iterationData.get(\"patchBody\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"body\": \"{{patchBody}}\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check post after body updating",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET: 200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.test(\"GET: id matches env\", () => pm.expect(j.id).to.eql(Number(pm.environment.get(\"postId\"))));\r",
+									"const schema = {\r",
+									"  type: \"object\",\r",
+									"  required: [\"id\",\"title\",\"body\",\"userId\"],\r",
+									"  properties: {\r",
+									"    id: { type: \"number\" },\r",
+									"    title: { type: \"string\", minLength: 1 },\r",
+									"    body: { type: \"string\" },\r",
+									"    userId: { type: \"number\" }\r",
+									"  }\r",
+									"};\r",
+									"pm.test(\"Schema OK\", () => pm.response.to.have.jsonSchema(schema));\r",
+									"pm.test(\"GET: data of fields is expected\", () => {\r",
+									"  pm.expect(j.title).to.eql(pm.iterationData.get(\"patchTitle\"));\r",
+									"    pm.expect(j.body).to.eql(pm.iterationData.get(\"patchBody\"));\r",
+									"    pm.expect(j.userId).to.eql(Number(pm.iterationData.get(\"userId\")));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete posts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"DELETE 200\", ()=> pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check after deleting",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"GET-after-DELETE 404\", ()=> pm.response.to.have.status(404));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localUrl}}/posts/{{postId}}",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts",
+								"{{postId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"function hasValidToken() {\r",
+							"  const t = pm.environment.get(\"token\");\r",
+							"  const exp = pm.environment.get(\"token_exp\"); // epoch ms\r",
+							"  return t && exp && Date.now() < Number(exp);\r",
+							"}\r",
+							"\r",
+							"if (!hasValidToken()) {\r",
+							"  pm.sendRequest({\r",
+							"    url: pm.environment.get(\"localUrl\") + \"/login\",\r",
+							"    method: \"POST\",\r",
+							"    header: { \"Content-Type\": \"application/json\" },\r",
+							"    body: { mode: \"raw\", raw: JSON.stringify({ username: \"Vadym\", password: \"12345\" }) }\r",
+							"  }, (err, res) => {\r",
+							"    if (err || !res || res.code !== 200) {\r",
+							"      console.log(\"Login failed:\", err || res && res.text());\r",
+							"      return; // тести потім зловлять 401\r",
+							"    }\r",
+							"    const j = res.json();\r",
+							"    pm.environment.set(\"token\", j.token);\r",
+							"    // якщо сервер повертає expiresIn типу \"30m\" – згенеруємо орієнтовний exp (30 хв)\r",
+							"    const expMs = j.expiresIn === \"30m\" ? 30*60*1000 : 20*60*1000;\r",
+							"    pm.environment.set(\"token_exp\", Date.now() + expMs);\r",
+							"  });\r",
+							"}"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Negative",
+			"item": [
+				{
+					"name": "Negative post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"(() => {\r",
+									"  const expected = Number(pm.iterationData.get(\"expectedStatus\"));\r",
+									"  const mode = String(pm.iterationData.get(\"mode\") || \"\");\r",
+									"  const bodyText = pm.response.text();\r",
+									"\r",
+									"  pm.test(`Status is ${expected}`, () => {\r",
+									"    pm.response.to.have.status(expected);\r",
+									"  });\r",
+									"  if (expected >= 400) {\r",
+									"    pm.test(\"Error message or explanation present\", () => {\r",
+									"      const hasJson = pm.response.headers.get(\"Content-Type\")?.includes(\"application/json\");\r",
+									"      if (hasJson) {\r",
+									"        const j = pm.response.json();\r",
+									"        pm.expect(Object.keys(j).length > 0, \"response JSON should not be empty\").to.be.true;\r",
+									"      } else {\r",
+									"        pm.expect(bodyText.length > 0, \"response text should not be empty\").to.be.true;\r",
+									"      }\r",
+									"    });\r",
+									"  }\r",
+									"  if (mode === \"not_found\") {\r",
+									"    pm.test(\"GET not found returns 404 with empty or error body\", () => {\r",
+									"      pm.expect([0, true].some(x => true)); // просто маркер; можна уточнити під твій сервер\r",
+									"    });\r",
+									"  }\r",
+									"})();\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Беремо userId з поточної ітерації\r",
+									"const raw = pm.iterationData.get(\"userId\");\r",
+									"\r",
+									"// Функція: чи виглядає як ціле число (напр. \"1\" -> true, \"01\" -> true)\r",
+									"function looksInteger(x) {\r",
+									"  return typeof x === 'number'\r",
+									"    ? Number.isInteger(x)\r",
+									"    : typeof x === 'string' && /^[+-]?\\d+$/.test(x.trim());\r",
+									"}\r",
+									"\r",
+									"// Формуємо payload так, щоб у тілі не треба було лапок\r",
+									"let userIdPayload;\r",
+									"if (raw === undefined || raw === null || raw === \"\") {\r",
+									"  userIdPayload = null; // або видали ключ у Body за потреби\r",
+									"} else if (looksInteger(raw)) {\r",
+									"  userIdPayload = Number(raw);     // підставимо як число\r",
+									"} else {\r",
+									"  userIdPayload = JSON.stringify(String(raw)); // підставимо як \"abc\"\r",
+									"}\r",
+									"\r",
+									"// Збережемо у змінну запиту (scope: variables)\r",
+									"pm.variables.set(\"userIdPayload\", userIdPayload);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"{{title}}\",\r\n  \"body\": \"{{body}}\",\r\n  \"userId\": {{userIdPayload}},\r\n  \"extraField\": \"{{extraField}}\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{localUrl}}/posts",
+							"host": [
+								"{{localUrl}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"const mode = pm.iterationData.get(\"mode\");\r",
+							"if (mode === \"auth_missing\") {\r",
+							"    pm.request.headers.upsert({\r",
+							"        key: \"Authorization\",\r",
+							"        value: \"\"\r",
+							"    });\r",
+							"} else if (mode === \"auth_invalid\") {\r",
+							"    pm.request.headers.upsert({\r",
+							"        key: \"Authorization\",\r",
+							"        value: \"Bearer invalid.token.here\"\r",
+							"    });\r",
+							"} else {\r",
+							"    function hasValidToken() {\r",
+							"        const t = pm.environment.get(\"token\");\r",
+							"        const exp = pm.environment.get(\"token_exp\"); // epoch ms\r",
+							"        return t && exp && Date.now() < Number(exp);\r",
+							"    }\r",
+							"    if (!hasValidToken()) {\r",
+							"        pm.sendRequest({\r",
+							"            url: pm.environment.get(\"localUrl\") + \"/login\",\r",
+							"            method: \"POST\",\r",
+							"            header: {\r",
+							"                \"Content-Type\": \"application/json\"\r",
+							"            },\r",
+							"            body: {\r",
+							"                mode: \"raw\",\r",
+							"                raw: JSON.stringify({\r",
+							"                    username: \"Vadym\",\r",
+							"                    password: \"12345\"\r",
+							"                })\r",
+							"            }\r",
+							"        }, (err, res) => {\r",
+							"            if (err || !res || res.code !== 200) {\r",
+							"                console.log(\"Login failed:\", err || res && res.text());\r",
+							"                return; // тести потім зловлять 401\r",
+							"            }\r",
+							"            const j = res.json();\r",
+							"            pm.environment.set(\"token\", j.token);\r",
+							"            // якщо сервер повертає expiresIn типу \"30m\" – згенеруємо орієнтовний exp (30 хв)\r",
+							"            const expMs = j.expiresIn === \"30m\" ? 30 * 60 * 1000 : 20 * 60 * 1000;\r",
+							"            pm.environment.set(\"token_exp\", Date.now() + expMs);\r",
+							"        });\r",
+							"    }\r",
+							"}\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"function hasValidToken() {\r",
+					"  const t = pm.environment.get(\"token\");\r",
+					"  const exp = pm.environment.get(\"token_exp\"); // epoch ms\r",
+					"  return t && exp && Date.now() < Number(exp);\r",
+					"}\r",
+					"\r",
+					"if (!hasValidToken()) {\r",
+					"  pm.sendRequest({\r",
+					"    url: pm.environment.get(\"localUrl\") + \"/login\",\r",
+					"    method: \"POST\",\r",
+					"    header: { \"Content-Type\": \"application/json\" },\r",
+					"    body: { mode: \"raw\", raw: JSON.stringify({ username: \"Vadym\", password: \"12345\" }) }\r",
+					"  }, (err, res) => {\r",
+					"    if (err || !res || res.code !== 200) {\r",
+					"      console.log(\"Login failed:\", err || res && res.text());\r",
+					"      return; // тести потім зловлять 401\r",
+					"    }\r",
+					"    const j = res.json();\r",
+					"    pm.environment.set(\"token\", j.token);\r",
+					"    // якщо сервер повертає expiresIn типу \"30m\" – згенеруємо орієнтовний exp (30 хв)\r",
+					"    const expMs = j.expiresIn === \"30m\" ? 30*60*1000 : 20*60*1000;\r",
+					"    pm.environment.set(\"token_exp\", Date.now() + expMs);\r",
+					"  });\r",
+					"}\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

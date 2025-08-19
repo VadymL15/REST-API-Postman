@@ -1,0 +1,48 @@
+[
+  {
+    "case": "empty title",
+    "id": 201,
+    "title": "",
+    "body": "Body with empty title",
+    "userId": 1,
+    "expectedStatus": 422,
+    "mode": "validation"
+  },
+  {
+    "case": "userId not numeric",
+    "id": 202,
+    "title": "Bad userId",
+    "body": "userId is string",
+    "userId": "abc",
+    "expectedStatus": 422,
+    "mode": "validation"
+  },
+  {
+    "case": "extra field",
+    "id": 203,
+    "title": "Has extra1",
+    "body": "Includes unexpected field",
+    "userId": 1,
+    "extraField": "boom",
+    "expectedStatus": 400,
+    "mode": "validation"
+  },
+  {
+    "case": "missing token on POST",
+    "id": 204,
+    "title": "No token",
+    "body": "Should be 401",
+    "userId": 1,
+    "expectedStatus": 401,
+    "mode": "auth_missing"
+  },
+  {
+    "case": "invalid token on POST",
+    "id": 205,
+    "title": "Invalid token",
+    "body": "Should be 401",
+    "userId": 1,
+    "expectedStatus": 401,
+    "mode": "auth_invalid"
+  }
+]

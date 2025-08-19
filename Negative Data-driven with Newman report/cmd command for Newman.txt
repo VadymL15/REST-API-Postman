@@ -1,0 +1,7 @@
+newman run "Data-driven (Runner with CSV-JSON).postman_collection.json" ^
+  --folder "Negative" ^
+  -e "For local server.postman_environment.json" ^
+  -d "data-negative.json" ^
+  -r cli,htmlextra ^
+  --reporter-htmlextra-export "./reports/negative-report.html" ^
+  --reporter-htmlextra-title "NEGATIVE API Tests"
